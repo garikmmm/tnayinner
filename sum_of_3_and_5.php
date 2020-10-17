@@ -22,9 +22,7 @@ function sum_of_3_and_5() {
      */
 
     $sum = 0;
-    $count = 0;
     for($i = 3; $i < 1000; $i += 3) {
-        ++$count;
         $sum += $i;
     }
 
