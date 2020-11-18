@@ -1,0 +1,11 @@
+int a = 1;
+a = a + 3;
+print(a);
+
+string b = "ajkshdf";
+print(b);
+
+int i;
+for (i = 0; i < 10; ++i) {
+    print(i);
+}
