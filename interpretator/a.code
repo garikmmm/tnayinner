@@ -1,0 +1,7 @@
+a = a + 3;
+Int a = 1;
+print a;
+
+String b;
+b = "ajkshdf";
+print b;

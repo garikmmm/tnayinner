@@ -1,0 +1,20 @@
+
+namespace interpretator {
+    namespace values {
+        class Variable: public InterfaceValue {
+            string variableName;
+        public:
+            void setVariableName(string v) {
+                variableName = v;
+            }
+
+            string getValueTypeName() override {
+                return "Variable";
+            }
+
+            string getValueIntermediateCode() override {
+                return "Value_V_(" + variableName + ")";
+            }
+        };
+    }
+}
