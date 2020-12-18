@@ -3,22 +3,35 @@ namespace interpretator {
     namespace operators {
         class Declare : public InterfaceOperator {
             string variableName;
-            types::InterfaceType variableType;
+            types::InterfaceType *variableType;
 
         public:
+            InterfaceOperator *clone() const override {
+                return new Declare(*this);
+            }
 
             void setVariableName(string name) {
                 variableName = name;
             }
-            void setVariableType(types::InterfaceType type) {
+
+            string getVariableName() {
+                return variableName;
+            }
+
+            void setVariableType(types::InterfaceType *type) {
                 variableType = type;
             }
 
-            string getOperatorIntermediateCode() override {
-                return "OperatorDeclare(" + variableName + "," + variableType.getTypeNameInSource() + ")";
+            types::InterfaceType *getVariableType() {
+                return variableType;
             }
+
+            string getOperatorIntermediateCode() const override {
+                return "Operator_Declare(" + variableName + ",\"" + variableType->getTypeNameInSource() + "\")";
+            }
+
             string getOperatorNameInSource() override {
-                return "";
+                return "Declare";;
             }
         };
     }

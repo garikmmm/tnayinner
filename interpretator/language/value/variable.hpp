@@ -1,11 +1,15 @@
 
 namespace interpretator {
     namespace values {
-        class Variable: public InterfaceValue {
+        class Variable : public InterfaceValue {
             string variableName;
         public:
             void setVariableName(string v) {
                 variableName = v;
+            }
+
+            string getVariableName() {
+                return variableName;
             }
 
             string getValueTypeName() override {
@@ -13,7 +17,7 @@ namespace interpretator {
             }
 
             string getValueIntermediateCode() override {
-                return "Value_V_(" + variableName + ")";
+                return "Value_V(" + variableName + ")";
             }
         };
     }

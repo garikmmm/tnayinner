@@ -1,7 +1,7 @@
 
 namespace interpretator {
     namespace values {
-        class IntegerConstant: public InterfaceValue {
+        class IntegerConstant : public InterfaceValue {
             int value;
         public:
             void setValue(int v) {
@@ -13,7 +13,7 @@ namespace interpretator {
             }
 
             string getValueIntermediateCode() override {
-                return "Value_I_(" + std::to_string(value) + ")";
+                return "Value_I(" + std::to_string(value) + ")";
             }
         };
     }

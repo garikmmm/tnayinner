@@ -7,16 +7,13 @@ namespace interpretator {
         class InterfaceValue {
 
         public:
-//            template <typename T>
-//            void setValue(T) {
-//            }
 
             virtual string getValueTypeName() {
-                return "__NOT_IMPLEMENTED__";
+                return "__NOT_IMPLEMENTED__InterfaceValue__getValueTypeName__";
             }
 
             virtual string getValueIntermediateCode() {
-                return "__NOT_IMPLEMENTED__";
+                return "__NOT_IMPLEMENTED__InterfaceValue__getValueIntermediateCode__";
             }
         };
     }

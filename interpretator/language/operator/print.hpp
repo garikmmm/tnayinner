@@ -1,25 +1,25 @@
 
 namespace interpretator {
+
     namespace operators {
-        class Assign : public InterfaceOperator {
+
+        class Print : public InterfaceOperator {
 
         public:
             InterfaceOperator *clone() const override {
-                return new Assign(*this);
+                return new Print(*this);
             }
 
             static string getOperatorNameInSourceStatic() {
-                return "=";
+                return "Print";
             }
 
             string getOperatorNameInSource() override {
-                return Assign::getOperatorNameInSourceStatic();
+                return Print::getOperatorNameInSourceStatic();
             }
 
             string getOperatorIntermediateCode() const override {
-                return "Operator_Assign(" + operand1Value->getValueIntermediateCode()
-                            + "," +
-                            operand2Value->getValueIntermediateCode() + ")";
+                return "Operator_Print(" + operand1Value->getValueIntermediateCode() + ")";
             }
         };
     }

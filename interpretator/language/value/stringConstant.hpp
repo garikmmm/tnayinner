@@ -1,6 +1,6 @@
 namespace interpretator {
     namespace values {
-        class StringConstant: public InterfaceValue {
+        class StringConstant : public InterfaceValue {
             string value;
         public:
             void setValue(string v) {
@@ -12,7 +12,7 @@ namespace interpretator {
             }
 
             string getValueIntermediateCode() override {
-                return "Value_S_(" + value + ")";
+                return "Value_S(" + value + ")";
             }
         };
     }
