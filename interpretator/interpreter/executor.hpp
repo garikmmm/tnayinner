@@ -67,14 +67,6 @@ namespace interpreter::executor {
                 return result;
             }
 
-
-            Executor() {
-            }
-
-            Executor(Executor const &);
-
-            void operator=(Executor const &);
-
             executor::Variable *Operator_Declare(string name, types::TypesEnum type) {
                 if ("" == name) {
                     throw "Variable name is empty";
@@ -368,12 +360,6 @@ namespace interpreter::executor {
                 }
 
                 executeOperator(operatorName, arguments);
-            }
-
-            static Executor &getInstance() {
-                static Executor instance;
-                // Instantiated on first use.
-                return instance;
             }
 
         };

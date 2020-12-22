@@ -40,6 +40,7 @@ int main(int argc, char *argv[]) {
     string fileBaseNameWithPath = "/Applications/MAMP/htdocs/tnayinner/interpreter/a";
     ofstream intermediateFile(fileBaseNameWithPath + ".intermediate");
     Parser p;
+    Executor e;
 
 //    p.parse(argv[1]);
     vector<operators::InterfaceOperator *> commands;
@@ -52,7 +53,7 @@ int main(int argc, char *argv[]) {
         string line = command->getOperatorIntermediateCode();
         std::cout << i + 1 << ":" << line << std::endl;
         intermediateFile << line << std::endl;
-        Executor::getInstance().executeLine(line, i + 1, command->getSourceLineNumber());
+        e.executeLine(line, i + 1, command->getSourceLineNumber());
     }
     intermediateFile.close();
 
