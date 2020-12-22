@@ -10,6 +10,14 @@ namespace interpretator {
             types::TypesEnum type;
 
         public:
+            ~Variable() {
+                if (types::TypesEnum::IntegerType == type) {
+                    delete static_cast<int *>(variableValue);
+                } else {
+                    delete static_cast<std::string *>(variableValue);
+                }
+            }
+
             const string &getVariableName() const {
                 return variableName;
             }
@@ -22,28 +30,22 @@ namespace interpretator {
                 return variableValue;
             }
 
-            std::string* getVariableStringValue() const {
-                return static_cast<std::string*>(variableValue);
+            std::string getVariableStringValue() const {
+                return *static_cast<std::string*>(variableValue);
             }
 
             int getVariableIntegerValue() const {
-                union void_cast {
-                    void* ptr;
-                    int value;
-                };
-                union void_cast u;
-                u.ptr = variableValue;
-                return u.value;
+                return *(int*)variableValue;
             }
 
             void setVariableValue(void *value) {
                 variableValue = value;
             }
-            void setVariableStringValue(string *value) {
-                variableValue = (void*)value;
+            void setVariableStringValue(string* value) {
+                variableValue = value;
             }
-            void setVariableIntegerValue(int *value) {
-                variableValue = (void*)value;
+            void setVariableIntegerValue(int* value) {
+                variableValue = value;
             }
 
             types::TypesEnum getType() const {

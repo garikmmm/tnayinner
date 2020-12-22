@@ -54,7 +54,7 @@ namespace interpretator {
                     if (!isInString && ')' == s[i]) {
                         ++countOfClosingBraces;
                     }
-                    if (!isInString && ',' == s[i]) {
+                    if (!isInString && ',' == s[i] && countOfOpeningBraces == countOfClosingBraces + 1) {
                         result->push_back(s.substr(start + 1, i - start - 1));
                         start = i;
                     }
@@ -148,6 +148,24 @@ namespace interpretator {
                 }
             }
 
+            executor::Variable* executeOperatorWithArguments(string &s) {
+                executor::Variable* v;
+                if (isString(s)) {
+                    v = new executor::Variable;
+                    v->setType(types::TypesEnum::StringType);
+                    v->setVariableStringValue(new string(s));
+                } else if (isInteger(s)) {
+                    v = new executor::Variable;
+                    v->setType(types::TypesEnum::IntegerType);
+                    v->setVariableIntegerValue(new int(std::stoi( s )));
+                } else {
+                    string o = getOperatorName(s);
+                    string as = s.substr(o.length());
+                    vector<string>* oa = getOperatorArguments(as);
+                    v = executeOperator(o, oa);
+                }
+                return v;
+            }
             executor::Variable* executeOperator(string &operatorName, vector<string> *arguments) {
                 if ("Operator_Print" == operatorName) {
                     string expressionArguments = arguments->at(0);
@@ -159,7 +177,7 @@ namespace interpretator {
                     std::cout << "Type: " << printValue->getType()
                                 << ", value: ";
                     if (types::TypesEnum::StringType == printValue->getType()) {
-                        std::cout << *printValue->getVariableStringValue() << std::endl;
+                        std::cout << printValue->getVariableStringValue() << std::endl;
                     } else {
                         std::cout << printValue->getVariableIntegerValue() << std::endl;
                     }
@@ -232,42 +250,11 @@ namespace interpretator {
                     return Operator_Assign(variableToAssign->getVariableName(), variableValue);
                 }
                 if ("Operator_Add" == operatorName) {
-                    string* arg0String = new std::string(arguments->at(0));
-                    string* arg1String = new std::string(arguments->at(0));
+                    string arg0String = arguments->at(0);
+                    string arg1String = arguments->at(1);
 
-                    executor::Variable* arg0 = new executor::Variable;
-                    executor::Variable* arg1 = new executor::Variable;
-                    if (isString(*arg0String)) {
-                        arg0->setType(types::TypesEnum::StringType);
-                        arg0->setVariableStringValue(arg0String);
-                    } else if (isInteger(*arg0String)) {
-                        arg0->setType(types::TypesEnum::IntegerType);
-                        arg0->setVariableIntegerValue(new int(std::stoi( *arg0String )));
-                    } else {
-                        if (!isVariableWithNameDeclared(*arg0String)) {
-                            if (DEBUG) {
-                                cout << "Error: unknown variable: " + *arg0String << endl;
-                            }
-                            throw "Error: unknown variable: " + *arg0String;
-                        }
-                        arg0 = getVariableByName(*arg0String);
-                    }
-                    
-                    if (isString(*arg1String)) {
-                        arg1->setType(types::TypesEnum::StringType);
-                        arg1->setVariableStringValue(arg1String);
-                    } else if (isInteger(*arg1String)) {
-                        arg1->setType(types::TypesEnum::IntegerType);
-                        arg1->setVariableIntegerValue(new int(std::stoi( *arg1String )));
-                    } else {
-                        if (!isVariableWithNameDeclared(*arg1String)) {
-                            if (DEBUG) {
-                                cout << "Error: unknown variable: " + *arg1String << endl;
-                            }
-                            throw "Error: unknown variable: " + *arg1String;
-                        }
-                        arg1 = getVariableByName(*arg1String);
-                    }
+                    executor::Variable* arg0 = executeOperatorWithArguments(arg0String);
+                    executor::Variable* arg1 = executeOperatorWithArguments(arg1String);
 
                     if (arg0->getType() != arg0->getType()) {
                         if (DEBUG) {
@@ -279,16 +266,19 @@ namespace interpretator {
                     executor::Variable* tmpResult = new executor::Variable;
 
                     if (types::TypesEnum::StringType == arg0->getType()) {
-                        tmpResult->setType(types::TypesEnum::StringType);
                         std::string* value;
-                        *value = *arg0->getVariableStringValue()
-                                    + *arg1->getVariableStringValue();
+                        value = new string(arg0->getVariableStringValue()
+                                    + arg1->getVariableStringValue());
+                        tmpResult->setVariableStringValue(value);
+                        tmpResult->setType(types::TypesEnum::StringType);
                     }
                     if (types::TypesEnum::IntegerType == arg0->getType()) {
-                        tmpResult->setType(types::TypesEnum::IntegerType);
+                        int tmp = arg0->getVariableIntegerValue()
+                                  + arg1->getVariableIntegerValue();
                         int* value;
-                        value = new int(arg0->getVariableIntegerValue()
-                                 + arg1->getVariableIntegerValue());
+                        value = new int(tmp);
+                        tmpResult->setVariableIntegerValue(value);
+                        tmpResult->setType(types::TypesEnum::IntegerType);
                     }
 
                     return tmpResult;
