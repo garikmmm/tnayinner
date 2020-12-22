@@ -1,7 +1,6 @@
 using namespace std;
 
-namespace interpretator {
-    namespace executor {
+namespace interpreter::executor {
 
         class Variable {
 
@@ -57,4 +56,3 @@ namespace interpretator {
             }
         };
     }
-}

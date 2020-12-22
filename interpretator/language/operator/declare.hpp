@@ -1,6 +1,5 @@
 
-namespace interpretator {
-    namespace operators {
+namespace interpreter::operators {
         class Declare : public InterfaceOperator {
             string variableName;
             types::InterfaceType *variableType;
@@ -35,4 +34,3 @@ namespace interpretator {
             }
         };
     }
-}

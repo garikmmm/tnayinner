@@ -1,6 +1,5 @@
 
-namespace interpretator {
-    namespace types {
+namespace interpreter::types {
         class Integer : public InterfaceType {
         public:
             TypesEnum getType() const override {
@@ -12,4 +11,3 @@ namespace interpretator {
             }
         };
     }
-}

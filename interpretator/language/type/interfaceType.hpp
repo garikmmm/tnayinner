@@ -2,8 +2,7 @@
 
 using namespace std;
 
-namespace interpretator {
-    namespace types {
+namespace interpreter::types {
         enum TypesEnum {
             IntegerType,
             StringType,
@@ -19,4 +18,3 @@ namespace interpretator {
             }
         };
     }
-}

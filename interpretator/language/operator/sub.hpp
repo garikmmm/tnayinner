@@ -1,6 +1,5 @@
 
-namespace interpretator {
-    namespace operators {
+namespace interpreter::operators {
         class Sub : public InterfaceOperator {
 
         public:
@@ -26,4 +25,3 @@ namespace interpretator {
             }
         };
     }
-}

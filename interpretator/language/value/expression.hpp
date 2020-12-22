@@ -1,15 +1,13 @@
 
-namespace interpretator {
-
-    namespace values {
+namespace interpreter::values {
         class Expression : public InterfaceValue {
             operators::InterfaceOperator *op;
         public:
-            void setOperator(interpretator::operators::InterfaceOperator *v) {
+            void setOperator(interpreter::operators::InterfaceOperator *v) {
                 op = v;
             }
 
-            interpretator::operators::InterfaceOperator *getOperator() {
+            interpreter::operators::InterfaceOperator *getOperator() {
                 return op;
             }
 
@@ -22,4 +20,3 @@ namespace interpretator {
             }
         };
     }
-}

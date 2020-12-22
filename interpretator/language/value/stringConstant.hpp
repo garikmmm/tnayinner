@@ -1,5 +1,4 @@
-namespace interpretator {
-    namespace values {
+namespace interpreter::values {
         class StringConstant : public InterfaceValue {
             string value;
         public:
@@ -16,4 +15,3 @@ namespace interpretator {
             }
         };
     }
-}

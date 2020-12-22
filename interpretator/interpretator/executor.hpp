@@ -1,7 +1,6 @@
 using namespace std;
 
-namespace interpretator {
-    namespace executor {
+namespace interpreter::executor {
         class Executor {
 
         private:
@@ -9,13 +8,13 @@ namespace interpretator {
             const bool DEBUG = false;
             string _sourceContents;
 
-            bool isString(string& s) {
+            bool isString(string &s) {
                 return '"' == s.front() && '"' == s.back();
             }
 
-            bool isInteger(string& s) {
+            bool isInteger(string &s) {
                 return !s.empty() && std::find_if(s.begin(),
-                          s.end(), [](unsigned char c) { return !std::isdigit(c); }) == s.end();
+                                                  s.end(), [](unsigned char c) { return !std::isdigit(c); }) == s.end();
             }
 
             string getOperatorName(string &s) {
@@ -76,7 +75,7 @@ namespace interpretator {
 
             void operator=(Executor const &);
 
-            executor::Variable* Operator_Declare(string name, types::TypesEnum type) {
+            executor::Variable *Operator_Declare(string name, types::TypesEnum type) {
                 if ("" == name) {
                     throw "Variable name is empty";
                 }
@@ -105,6 +104,130 @@ namespace interpretator {
 //            evaluateExpression(v, expression);
             }
 
+            Variable *runOperatorPrint(vector<string> *arguments) {
+                string expressionArguments = arguments->at(0);
+                string o = getOperatorName(expressionArguments);
+                string as = expressionArguments.substr(o.length());
+                vector<string> *oa = getOperatorArguments(as);
+                Variable *printValue = executeOperator(o, oa);
+
+                cout << "Type: " << printValue->getType()
+                     << ", value: ";
+                if (types::StringType == printValue->getType()) {
+                    cout << printValue->getVariableStringValue() << endl;
+                } else {
+                    cout << printValue->getVariableIntegerValue() << endl;
+                }
+
+
+                return printValue;
+            }
+
+            Variable *runOperator1(vector<string> *arguments) {
+                string expressionArguments = arguments->at(0);
+                string o = getOperatorName(expressionArguments);
+                string as = expressionArguments.substr(o.length());
+                vector<string> *oa = getOperatorArguments(as);
+
+                return executeOperator(o, oa);
+            }
+
+            Variable *runValueV(vector<string> *arguments) {
+                string variableName = arguments->at(0);
+                return getVariableByName(variableName);
+            }
+
+            Variable *runValueI(vector<string> *arguments) {
+                string variableValue = arguments->at(0);
+                executor::Variable *v = new executor::Variable;
+                v->setVariableValue(new int(std::stoi(variableValue)));
+                v->setType(types::TypesEnum::IntegerType);
+                return v;
+            }
+
+            Variable *runValueS(vector<string> *arguments) {
+                string variableValue = arguments->at(0);
+                executor::Variable *v = new executor::Variable;
+                v->setVariableValue(new string(variableValue.substr(1, variableValue.size() - 2)));
+                v->setType(types::TypesEnum::StringType);
+                return v;
+            }
+
+            Variable *runOperatorDeclare(vector<string> *arguments) {
+                string variableName = arguments->at(0);
+                string variableTypeString = arguments->at(1);
+                types::TypesEnum type;
+                if ("\"Int\"" == variableTypeString) {
+                    type = types::TypesEnum::IntegerType;
+                } else if ("\"String\"" == variableTypeString) {
+                    type = types::TypesEnum::StringType;
+                } else {
+                    if (DEBUG) {
+                        cout << "Error: unknown type declaration: " << type << endl;
+                    }
+                    throw "Error: unknown type declaration: " + variableTypeString;
+                }
+                return Operator_Declare(variableName, type);
+            }
+
+            Variable *runOperatorAssign(vector<string> *arguments) {
+                string argument1String = arguments->at(0);
+                string argument2String = arguments->at(1);
+                string variableOperatorName = getOperatorName(argument1String);
+                if ("Value_V" != variableOperatorName) {
+                    if (DEBUG) {
+                        cout << "Error: Only variable can be assigned: " << variableOperatorName << endl;
+                    }
+                    throw "Error: Only variable can be assigned: " + variableOperatorName;
+                }
+                string variableArgumentsString = argument1String.substr(variableOperatorName.length());
+                vector<string> *variableArguments = getOperatorArguments(variableArgumentsString);
+                executor::Variable *variableToAssign = executeOperator(variableOperatorName, variableArguments);
+
+                string valueOperatorName = getOperatorName(argument2String);
+                string valueArgumentsString = argument2String.substr(valueOperatorName.length());
+                vector<string> *valueOperatorArguments = getOperatorArguments(valueArgumentsString);
+
+                executor::Variable *variableValue = executeOperator(valueOperatorName, valueOperatorArguments);
+
+                return Operator_Assign(variableToAssign->getVariableName(), variableValue);
+            }
+
+            Variable *runOperatorAdd(vector<string> *arguments) {
+                string arg0String = arguments->at(0);
+                string arg1String = arguments->at(1);
+
+                executor::Variable *arg0 = executeOperatorWithArguments(arg0String);
+                executor::Variable *arg1 = executeOperatorWithArguments(arg1String);
+
+                if (arg0->getType() != arg0->getType()) {
+                    if (DEBUG) {
+                        cout << "Error: arguments for math operation must be of same type " << endl;
+                    }
+                    throw "Error: arguments for math operation must be of same type ";
+                }
+
+                executor::Variable *tmpResult = new executor::Variable;
+
+                if (types::TypesEnum::StringType == arg0->getType()) {
+                    std::string *value;
+                    value = new string(arg0->getVariableStringValue()
+                                       + arg1->getVariableStringValue());
+                    tmpResult->setVariableStringValue(value);
+                    tmpResult->setType(types::TypesEnum::StringType);
+                }
+                if (types::TypesEnum::IntegerType == arg0->getType()) {
+                    int tmp = arg0->getVariableIntegerValue()
+                              + arg1->getVariableIntegerValue();
+                    int *value;
+                    value = new int(tmp);
+                    tmpResult->setVariableIntegerValue(value);
+                    tmpResult->setType(types::TypesEnum::IntegerType);
+                }
+
+                return tmpResult;
+            }
+
         public:
             executor::Variable *getVariableByName(string name) {
                 if (!isVariableWithNameDeclared(name)) {
@@ -121,7 +244,7 @@ namespace interpretator {
                 return got != _variables.end();
             }
 
-            executor::Variable* Operator_Assign(string name, executor::Variable *variable) {
+            executor::Variable *Operator_Assign(string name, executor::Variable *variable) {
                 if (!isVariableWithNameDeclared(name)) {
                     if (DEBUG) {
                         cout << "Variable " + name + " must be declared before assign" << endl;
@@ -148,8 +271,8 @@ namespace interpretator {
                 }
             }
 
-            executor::Variable* executeOperatorWithArguments(string &s) {
-                executor::Variable* v;
+            executor::Variable *executeOperatorWithArguments(string &s) {
+                executor::Variable *v;
                 if (isString(s)) {
                     v = new executor::Variable;
                     v->setType(types::TypesEnum::StringType);
@@ -157,131 +280,40 @@ namespace interpretator {
                 } else if (isInteger(s)) {
                     v = new executor::Variable;
                     v->setType(types::TypesEnum::IntegerType);
-                    v->setVariableIntegerValue(new int(std::stoi( s )));
+                    v->setVariableIntegerValue(new int(std::stoi(s)));
                 } else {
                     string o = getOperatorName(s);
                     string as = s.substr(o.length());
-                    vector<string>* oa = getOperatorArguments(as);
+                    vector<string> *oa = getOperatorArguments(as);
                     v = executeOperator(o, oa);
                 }
                 return v;
             }
-            executor::Variable* executeOperator(string &operatorName, vector<string> *arguments) {
+
+            executor::Variable *executeOperator(string &operatorName, vector<string> *arguments) {
                 if ("Operator_Print" == operatorName) {
-                    string expressionArguments = arguments->at(0);
-                    string o = getOperatorName(expressionArguments);
-                    string as = expressionArguments.substr(o.length());
-                    vector<string>* oa = getOperatorArguments(as);
-                    executor::Variable* printValue = executeOperator(o, oa);
-
-                    std::cout << "Type: " << printValue->getType()
-                                << ", value: ";
-                    if (types::TypesEnum::StringType == printValue->getType()) {
-                        std::cout << printValue->getVariableStringValue() << std::endl;
-                    } else {
-                        std::cout << printValue->getVariableIntegerValue() << std::endl;
-                    }
-
-
-                    return printValue;
+                    return runOperatorPrint(arguments);
                 }
                 if ("Operator_1" == operatorName || "Value_E" == operatorName) {
-                    string expressionArguments = arguments->at(0);
-                    string o = getOperatorName(expressionArguments);
-                    string as = expressionArguments.substr(o.length());
-                    vector<string>* oa = getOperatorArguments(as);
-
-                    return executeOperator(o, oa);
+                    return runOperator1(arguments);
                 }
                 if ("Value_V" == operatorName) {
-                    string variableName = arguments->at(0);
-                    return getVariableByName(variableName);
+                    return runValueV(arguments);
                 }
                 if ("Value_I" == operatorName) {
-                    string variableValue = arguments->at(0);
-                    executor::Variable* v = new executor::Variable;
-                    v->setVariableValue(new int(std::stoi(variableValue)));
-                    v->setType(types::TypesEnum::IntegerType);
-                    return v;
+                    return runValueI(arguments);
                 }
                 if ("Value_S" == operatorName) {
-                    string variableValue = arguments->at(0);
-                    executor::Variable* v = new executor::Variable;
-                    v->setVariableValue(new string(variableValue.substr(1, variableValue.size() - 2)));
-                    v->setType(types::TypesEnum::StringType);
-                    return v;
+                    return runValueS(arguments);
                 }
                 if ("Operator_Declare" == operatorName) {
-                    string variableName = arguments->at(0);
-                    string variableTypeString = arguments->at(1);
-                    types::TypesEnum type;
-                    if ("\"Int\"" == variableTypeString) {
-                        type = types::TypesEnum::IntegerType;
-                    } else if ("\"String\"" == variableTypeString) {
-                        type = types::TypesEnum::StringType;
-                    } else {
-                        if (DEBUG) {
-                            cout << "Error: unknown type declaration: " << type << endl;
-                        }
-                        throw "Error: unknown type declaration: " + variableTypeString;
-                    }
-                    return Operator_Declare(variableName, type);
+                    return runOperatorDeclare(arguments);
                 }
                 if ("Operator_Assign" == operatorName) {
-                    string argument1String = arguments->at(0);
-                    string argument2String = arguments->at(1);
-                    string variableOperatorName = getOperatorName(argument1String);
-                    if ("Value_V" != variableOperatorName) {
-                        if (DEBUG) {
-                            cout << "Error: Only variable can be assigned: " << variableOperatorName << endl;
-                        }
-                        throw "Error: Only variable can be assigned: " + variableOperatorName;
-                    }
-                    string variableArgumentsString = argument1String.substr(variableOperatorName.length());
-                    vector<string>* variableArguments = getOperatorArguments(variableArgumentsString);
-                    executor::Variable* variableToAssign = executeOperator(variableOperatorName, variableArguments);
-
-                    string valueOperatorName = getOperatorName(argument2String);
-                    string valueArgumentsString = argument2String.substr(valueOperatorName.length());
-                    vector<string>* valueOperatorArguments = getOperatorArguments(valueArgumentsString);
-
-                    executor::Variable* variableValue = executeOperator(valueOperatorName, valueOperatorArguments);
-
-                    return Operator_Assign(variableToAssign->getVariableName(), variableValue);
+                    return runOperatorAssign(arguments);
                 }
                 if ("Operator_Add" == operatorName) {
-                    string arg0String = arguments->at(0);
-                    string arg1String = arguments->at(1);
-
-                    executor::Variable* arg0 = executeOperatorWithArguments(arg0String);
-                    executor::Variable* arg1 = executeOperatorWithArguments(arg1String);
-
-                    if (arg0->getType() != arg0->getType()) {
-                        if (DEBUG) {
-                            cout << "Error: arguments for math operation must be of same type " << endl;
-                        }
-                        throw "Error: arguments for math operation must be of same type " ;
-                    }
-
-                    executor::Variable* tmpResult = new executor::Variable;
-
-                    if (types::TypesEnum::StringType == arg0->getType()) {
-                        std::string* value;
-                        value = new string(arg0->getVariableStringValue()
-                                    + arg1->getVariableStringValue());
-                        tmpResult->setVariableStringValue(value);
-                        tmpResult->setType(types::TypesEnum::StringType);
-                    }
-                    if (types::TypesEnum::IntegerType == arg0->getType()) {
-                        int tmp = arg0->getVariableIntegerValue()
-                                  + arg1->getVariableIntegerValue();
-                        int* value;
-                        value = new int(tmp);
-                        tmpResult->setVariableIntegerValue(value);
-                        tmpResult->setType(types::TypesEnum::IntegerType);
-                    }
-
-                    return tmpResult;
+                    return runOperatorAdd(arguments);
                 }
 
                 if (DEBUG) {
@@ -316,6 +348,7 @@ namespace interpretator {
 //                executeOperator(operatorName, arguments);
             }
 
+
             void executeLine(string &line, int lineNumber, int sourceLineNumber) {
                 if (DEBUG) {
                     cout << "-------" << endl << "Line " << lineNumber << ": " << line << endl;
@@ -345,4 +378,3 @@ namespace interpretator {
 
         };
     }
-}

@@ -2,7 +2,7 @@
 # refer to the root source directory of the project as ${HELLO_SOURCE_DIR} and
 # to the root binary directory of the project as ${HELLO_BINARY_DIR}.
 cmake_minimum_required(VERSION 3.13)
-project(interpretator)
+project(interpreter)
 set(CMAKE_CXX_STANDARD 17)
 
 # Recurse into the "Hello" and "Demo" subdirectories. This does not actually
@@ -11,4 +11,4 @@ set(CMAKE_CXX_STANDARD 17)
 #add_subdirectory (parser)
 #add_subdirectory (language)
 
-add_executable(interpretator main.cpp)
+add_executable(interpreter main.cpp)

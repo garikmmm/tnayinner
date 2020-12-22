@@ -1,6 +1,5 @@
 
-namespace interpretator {
-    namespace operators {
+namespace interpreter::operators {
         class Div : public InterfaceOperator {
 
         public:
@@ -25,4 +24,3 @@ namespace interpretator {
             }
         };
     }
-}

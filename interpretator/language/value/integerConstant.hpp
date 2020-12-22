@@ -1,6 +1,5 @@
 
-namespace interpretator {
-    namespace values {
+namespace interpreter::values {
         class IntegerConstant : public InterfaceValue {
             int value;
         public:
@@ -17,4 +16,3 @@ namespace interpretator {
             }
         };
     }
-}

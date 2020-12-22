@@ -2,8 +2,7 @@
 
 using namespace std;
 
-namespace interpretator {
-    namespace values {
+namespace interpreter::values {
         class InterfaceValue {
 
         public:
@@ -17,4 +16,3 @@ namespace interpretator {
             }
         };
     }
-}

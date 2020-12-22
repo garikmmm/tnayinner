@@ -1,7 +1,5 @@
 
-namespace interpretator {
-
-    namespace operators {
+namespace interpreter::operators {
 
         class Print : public InterfaceOperator {
 
@@ -23,4 +21,3 @@ namespace interpretator {
             }
         };
     }
-}

@@ -4,7 +4,7 @@
 
 using namespace std;
 
-namespace interpretator {
+namespace interpreter {
     class utils {
     public:
 

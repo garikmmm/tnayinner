@@ -1,5 +1,4 @@
-namespace interpretator {
-    namespace types {
+namespace interpreter::types {
         class String : public InterfaceType {
         public:
 
@@ -12,4 +11,3 @@ namespace interpretator {
             }
         };
     }
-}

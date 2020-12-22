@@ -6,7 +6,7 @@
 
 using namespace std;
 
-namespace interpretator {
+namespace interpreter {
 
     class Parser {
         const bool DEBUG = false;
@@ -39,7 +39,7 @@ namespace interpretator {
             _operators[sub->getOperatorNameInSource()] = sub;
         }
 
-        void initializeStandardFunctoins() {
+        void initializeStandardFunctions() {
             operators::Print *print = new operators::Print;
             _functions[print->getOperatorNameInSource()] = print;
         }
@@ -416,7 +416,7 @@ namespace interpretator {
         Parser() {
             initializeTypes();
             initializeOperators();
-            initializeStandardFunctoins();
+            initializeStandardFunctions();
         }
 
         vector<operators::InterfaceOperator *> parse(string sourcePath) {

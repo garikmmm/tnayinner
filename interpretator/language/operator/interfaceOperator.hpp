@@ -2,8 +2,7 @@
 
 using namespace std;
 
-namespace interpretator {
-    namespace operators {
+namespace interpreter::operators {
         class InterfaceOperator {
 
         protected:
@@ -64,4 +63,3 @@ namespace interpretator {
             virtual string getOperatorIntermediateCode() const = 0;
         };
     }
-}

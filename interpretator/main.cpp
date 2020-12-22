@@ -9,7 +9,7 @@
 #include "language/value/stringConstant.hpp"
 #include "language/value/variable.hpp"
 
-#include "interpretator/variable.hpp"
+#include "interpreter/variable.hpp"
 
 #include "language/operator/interfaceOperator.hpp"
 #include "language/operator/declare.hpp"
@@ -26,18 +26,18 @@
 #include "compiler/utils.hpp"
 #include "compiler/parser.hpp"
 
-#include "interpretator/executor.hpp"
+#include "interpreter/executor.hpp"
 
-using namespace interpretator;
+using namespace interpreter;
 using namespace executor;
 
 int main(int argc, char *argv[]) {
 
     if (2 != argc) {
-        printf("Usage is: interpretator example.code");
+        printf("Usage is: interpreter example.code");
         return 0;
     }
-    string fileBaseNameWithPath = "/Applications/MAMP/htdocs/tnayinner/interpretator/a";
+    string fileBaseNameWithPath = "/Applications/MAMP/htdocs/tnayinner/interpreter/a";
     ofstream intermediateFile(fileBaseNameWithPath + ".intermediate");
     Parser p;
 
