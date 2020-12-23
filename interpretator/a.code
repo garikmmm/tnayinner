@@ -2,10 +2,10 @@
 #  1. Typename variable;                // Int a;
 #  2. Typename variable = expression;   // String a = "asdf";
 #  3. variable = expression;            // a = 7; a = b; a = a + 9; a = b + c;
-#  4. language function call;           // print a;
+#  4. language standard function call;  // Print a;
 #  5. comment                           // # Lorem ipsum
 #  6. line without any command          // EMPTY LINE
-#  don't support expression with more than 2 operators // a = a + 2 + 3;
+#  expressions with more than 2 operators are not supported // a = a + 2 + 3;
 
 
 Int a = 1;
