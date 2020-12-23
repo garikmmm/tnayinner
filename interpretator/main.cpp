@@ -32,12 +32,13 @@ using namespace interpreter;
 using namespace executor;
 
 int main(int argc, char *argv[]) {
-
     if (2 != argc) {
-        printf("Usage is: interpreter example.code");
+        printf("Usage is: interpreter example.[code|intermediate] [-debug]");
         return 0;
     }
-    string fileBaseNameWithPath = "/Applications/MAMP/htdocs/tnayinner/interpreter/a";
+    // @todo implement command line arguments
+
+    string fileBaseNameWithPath = "/Applications/MAMP/htdocs/tnayinner/interpretator/a";
     ofstream intermediateFile(fileBaseNameWithPath + ".intermediate");
     Parser p;
     Executor e;

@@ -15,3 +15,6 @@ Print a;
 String b;
 b = "ajk)s(hdf";
 Print b;
+
+Int c = 11 + 100;
+Print c;

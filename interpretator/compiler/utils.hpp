@@ -101,5 +101,14 @@ namespace interpreter {
             std::cout << message << endl;
         }
 
+        static bool isString(string &s) {
+            return '"' == s.front() && '"' == s.back();
+        }
+
+        static bool isInteger(string &s) {
+            return !s.empty() && std::find_if(s.begin(),
+                                              s.end(), [](unsigned char c) { return !std::isdigit(c); }) == s.end();
+        }
+
     };
 }

@@ -8,15 +8,6 @@ namespace interpreter::executor {
             const bool DEBUG = false;
             string _sourceContents;
 
-            bool isString(string &s) {
-                return '"' == s.front() && '"' == s.back();
-            }
-
-            bool isInteger(string &s) {
-                return !s.empty() && std::find_if(s.begin(),
-                                                  s.end(), [](unsigned char c) { return !std::isdigit(c); }) == s.end();
-            }
-
             string getOperatorName(string &s) {
                 std::size_t found = s.find('(');
                 if (found == std::string::npos) {
@@ -265,11 +256,11 @@ namespace interpreter::executor {
 
             executor::Variable *executeOperatorWithArguments(string &s) {
                 executor::Variable *v;
-                if (isString(s)) {
+                if (utils::isString(s)) {
                     v = new executor::Variable;
                     v->setType(types::TypesEnum::StringType);
                     v->setVariableStringValue(new string(s));
-                } else if (isInteger(s)) {
+                } else if (utils::isInteger(s)) {
                     v = new executor::Variable;
                     v->setType(types::TypesEnum::IntegerType);
                     v->setVariableIntegerValue(new int(std::stoi(s)));
