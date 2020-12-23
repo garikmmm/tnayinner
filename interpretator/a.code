@@ -13,8 +13,12 @@ a = a + 1;
 Print a;
 
 String b;
-b = "ajk)s(hdf";
+b = "string with braces ();ajk)s(hdf";
 Print b;
 
 Int c = 11 + 100;
 Print c;
+
+String d;
+d = "Hello" + " Mello";
+Print d;
