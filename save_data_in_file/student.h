@@ -10,11 +10,11 @@ public:
     static const char FIELD_SEPARATOR = ',';
     static const char OBJECT_SEPARATOR = '|';
 
-    std::string serializeStudent() {
+    std::string serializeStudent() const {
         return name + FIELD_SEPARATOR + std::to_string(age) + FIELD_SEPARATOR + std::to_string(score) + FIELD_SEPARATOR;
     }
 
-    student* unSerializeStudent(std::string line) {
+    student* unSerializeStudent(std::string line) const {
         std::stringstream sLine(line);
         std::string segment;
         std::vector<std::string> parts;
@@ -31,18 +31,18 @@ public:
     }
 
 
-    std::string serializeList(std::vector<student> v) {
+    std::string serializeList(std::vector<student> v) const {
         std::string result = std::accumulate(std::begin(v), std::end(v), std::string(),
-                                             [](std::string &ss, student &s)
-                                             {
-                                                 std::string item = s.serializeStudent();
-                                                 return ss.empty() ? item : ss + OBJECT_SEPARATOR + item;
-                                             });
+                                 [](std::string &ss, const student &s)
+                                 {
+                                     std::string item = s.serializeStudent();
+                                     return ss.empty() ? item : ss + OBJECT_SEPARATOR + item;
+                                 });
         return result;
 
     }
 
-    std::vector<student*> unSerializeList(std::string lines) {
+    std::vector<student*> unSerializeList(std::string lines) const {
         std::stringstream sLines(lines);
         std::string segment;
         std::vector<student*> result;
