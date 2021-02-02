@@ -8,18 +8,20 @@ public:
     int age;
     float score;
     static const char FIELD_SEPARATOR = ',';
-    static const char OBJECT_SEPARATOR = '|';
+    static const char OBJECT_SEPARATOR = '\n';
 
-    std::string serializeStudent() const {
-        return name + FIELD_SEPARATOR + std::to_string(age) + FIELD_SEPARATOR + std::to_string(score) + FIELD_SEPARATOR;
+    student() {}
+
+    std::string serializeStudent() const override {
+        return name + FIELD_SEPARATOR + std::to_string(age) + FIELD_SEPARATOR + std::to_string(score);
     }
 
-    student* unSerializeStudent(std::string line) const {
+    student *unSerializeStudent(std::string line) const override {
         std::stringstream sLine(line);
         std::string segment;
         std::vector<std::string> parts;
 
-        while(std::getline(sLine, segment, '_'))
+        while(std::getline(sLine, segment, FIELD_SEPARATOR))
         {
             parts.push_back(segment);
         }
@@ -30,19 +32,19 @@ public:
         return tmp;
     }
 
-
-    std::string serializeList(std::vector<student> v) const {
-        std::string result = std::accumulate(std::begin(v), std::end(v), std::string(),
-                                 [](std::string &ss, const student &s)
-                                 {
-                                     std::string item = s.serializeStudent();
-                                     return ss.empty() ? item : ss + OBJECT_SEPARATOR + item;
-                                 });
-        return result;
-
+    std::string serializeList(std::vector<student *> v) const override {
+        std::stringstream ss;
+        for(size_t i = 0; i < v.size(); ++i)
+        {
+            if(i != 0) {
+                ss << OBJECT_SEPARATOR;
+            }
+            ss << v[i]->serializeStudent();
+        }
+        return ss.str();
     }
 
-    std::vector<student*> unSerializeList(std::string lines) const {
+    std::vector<student *> unSerializeList(std::string lines) const override {
         std::stringstream sLines(lines);
         std::string segment;
         std::vector<student*> result;

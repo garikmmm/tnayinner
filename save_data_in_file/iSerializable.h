@@ -3,11 +3,10 @@ class student;
 class iSerializable {
 
 public:
-    virtual std::string serializeStudent();
-    virtual student* unSerializeStudent(std::string line);
-    virtual std::string serializeList(std::vector<student*> v);
-    virtual std::vector<student*> unSerializeList(std::string);
-
+    virtual std::string serializeStudent() const = 0;
+    virtual student* unSerializeStudent(std::string) const = 0;
+    virtual std::string serializeList(std::vector<student*>) const = 0;
+    virtual std::vector<student*> unSerializeList(std::string) const = 0;
 };
 
 
