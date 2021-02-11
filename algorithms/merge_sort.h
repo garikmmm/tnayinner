@@ -1,3 +1,4 @@
+#include <vector>
 #include "../list/linked_list_double.h"
 namespace merge_sort {
     template<typename T>
